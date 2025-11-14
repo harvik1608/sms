@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <meta name="robots" content="">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Bulk Whatsapp SMS</title>
+        <title>{{ config('constant.app_name') }}</title>
         
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/apple-touch-icon.png') }}">
@@ -171,6 +171,24 @@
                                     <ul id="main_menu_list">
                                         <li class="permission" data-module="plan" data-title="Plan">
                                             <a href="{{ url('plans') }}"><i data-feather="box"></i><span>Plan List</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+                            @if(Auth::user()->role == 2)
+                                <li class="submenu-open">
+                                    <h6 class="submenu-hdr">Contacts</h6>
+                                    <ul id="main_menu_list">
+                                        <li class="permission" data-module="contact" data-title="Contact">
+                                            <a href="{{ url('contacts') }}"><i data-feather="box"></i><span>Contact List</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="submenu-open">
+                                    <h6 class="submenu-hdr">Messages</h6>
+                                    <ul id="main_menu_list">
+                                        <li class="permission" data-module="message" data-title="Message">
+                                            <a href="{{ url('messages') }}"><i data-feather="box"></i><span>Message List</span></a>
                                         </li>
                                     </ul>
                                 </li>

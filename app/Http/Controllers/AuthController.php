@@ -39,6 +39,6 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         // Redirect to admin login page (or wherever you prefer)
-        return redirect('/admin/login')->with('success', 'You have been logged out successfully.');
+        return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 }

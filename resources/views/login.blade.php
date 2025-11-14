@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
     	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    	<title>Bulk Whatsapp SMS</title>
+    	<title>{{ config('constant.app_name') }}</title>
     	<link rel="icon" type="image/x-icon" href="https://demos.themeselection.com/sneat-bootstrap-html-admin-template-free/assets/img/favicon/favicon.ico" />
     	<link rel="stylesheet" href="{{ asset('auth/vendor/css/core.css') }}" class="template-customizer-core-css" />
 	    <link rel="stylesheet" href="{{ asset('auth/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
@@ -26,7 +26,7 @@
 						<div class="card-body">
 							<div class="app-brand justify-content-center">
 								<a href="index-2.html" class="app-brand-link gap-2">
-									<span class="app-brand-text demo text-heading fw-bold">Bulk Whatsapp SMS</span>
+									<span class="app-brand-text demo text-heading fw-bold">{{ config('constant.app_name') }}</span>
 								</a>
 							</div>
 							@if ($errors->has('error'))

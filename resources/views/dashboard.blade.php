@@ -3,8 +3,8 @@
 <div class="welcome-wrap mb-4">
     <div class=" d-flex align-items-center justify-content-between flex-wrap">
         <div class="mb-3">
-            <h2 class="mb-1 text-white">Welcome {{ Auth::user()->name }}</h2>
-            <p class="text-light"><b>MyFish</b> - {{ date('d M, Y') }}</p>
+            <h2 class="mb-1 text-white">Hello {{ Auth::user()->name }}</h2>
+            <p class="text-light"><b>Welcome to {{ config('constant.app_name') }} - {{ date('d M, Y') }}</b></p>
         </div>
     </div>
     <div class="welcome-bg">
