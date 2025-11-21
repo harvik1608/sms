@@ -28,9 +28,8 @@
                         <th width="5%">#</th>
                         <th width="15%">Contact Name</th>
                         <th width="15%">Message Type</th>
-                        <th width="15%">Message</th>
                         <th width="10%">Is Sent</th>
-                        <th width="10%">Sent On</th>
+                        <th width="5%">Sent On</th>
                         <th width="10%" class="no-sort"></th>
                     </tr>
                 </thead>
@@ -46,7 +45,7 @@
 		<div class="modal-content">
 			<div class="page-wrapper-new p-0">
 				<div class="content">
-					<form action="{{ route('admin.contact.import') }}" method="POST" enctype="multipart/form-data">
+					<form action="{{ route('admin.message.send') }}" method="POST" enctype="multipart/form-data">
 						@csrf
 						<div class="modal-header">
 							<div class="page-title">
@@ -60,28 +59,26 @@
 							<div class="row">
 								<div class="col-lg-12 mb-3">
 		                            <label class="form-label">Send To</label>
-		                            <select class="select" name="send_to" id="send_to">
+		                            <select class="select" name="send_to[]" id="send_to" multiple>
 		                            	<option value="all">All</option>
+                                        @if(!$contacts->isEmpty())
+                                            @foreach($contacts as $contact)
+                                                <option value="{{ $contact->id }}">{{ $contact->name }}</option>
+                                            @endforeach
+                                        @endif
 		                            </select>
 		                        </div>
-		                        <div class="col-lg-12 mb-3">
-		                            <label class="form-label">Message Type</label>
-                                    <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="radio" name="message_type" id="email" checked />
-                                        <label class="form-check-label" for="email">Email</label>
-                                    </div>
-                                    <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="radio" name="message_type" id="whatsapp" />
-                                        <label class="form-check-label" for="whatsapp">Whatsapp</label>
-                                    </div>
-                                    <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="radio" name="message_type" id="both" />
-                                        <label class="form-check-label" for="both">Both</label>
-                                    </div>
-		                        </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="form-label">Message Type</label>
+                                    <select class="select" name="message_type" id="message_type">
+                                        <option value="1">Email</option>
+                                        <option value="2">Whatsapp</option>
+                                        <option value="3">Both</option>
+                                    </select>
+                                </div>
 								<div class="col-lg-12 mb-3 subject">
 		                            <label class="form-label">Subject<span class="text-danger ms-1">*</span></label>
-		                            <input type="text" class="form-control" name="name" id="name" />
+		                            <input type="text" class="form-control" name="subject" id="subject" />
 		                        </div>
 		                        <div class="col-lg-12 mb-3">
 		                            <label class="form-label">Message<span class="text-danger ms-1">*</span></label>
@@ -123,7 +120,6 @@
                 { data: 'id' },
                 { data: 'name' },
                 { data: 'message_type' },
-                { data: 'content' },
                 { data: 'is_sent' },
                 { data: 'sent_on' },
                 { 
@@ -151,8 +147,8 @@
                 $('.dataTables_filter').appendTo('.search-input');
             }  
         });
-        $("#send-message input[type=radio]").click(function(){
-        	if($(this).attr("id")== "whatsapp") {
+        $("#message_type").change(function(){
+        	if($(this).val() == "whatsapp") {
         		$(".subject").hide(500);
         	} else {
         		$(".subject").show(500);

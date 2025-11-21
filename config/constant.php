@@ -1,4 +1,4 @@
 <?php
     return [
-        'app_name' => "Bulk Whatsapp SMS"
+        'app_name' => "Tega Bulk Connect"
     ];

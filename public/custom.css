@@ -71,6 +71,10 @@ label[id$="-error"] {
 label[id$="-error"] {
 	display: none;
 }
+small[id$="-error"] {
+	color: #FF0000 !important;
+	font-weight: bold;
+}
 .me-1 {
 	margin-right: 0px !important;
 }

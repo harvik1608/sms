@@ -61,6 +61,7 @@ class PlanController extends Controller
                     'name' => $row->name,
                     'duration' => $row->duration,
                     'amount' => $row->amount,
+                    'whatsapp' => $row->whatsapp,
                     'status' => $row->is_active
                         ? '<span class="badge badge-success badge-xs d-inline-flex align-items-center">Active</span>'
                         : '<span class="badge badge-danger badge-xs d-inline-flex align-items-center">Inactive</span>',
@@ -96,6 +97,8 @@ class PlanController extends Controller
             $row->duration = trim($post['duration']);
             $row->amount = trim($post['amount']);
             $row->note = trim($post['note']);
+            $row->whatsapp = trim($post['whatsapp']);
+            $row->is_multiple_file_allow = $post['is_multiple_file_allow'];
             $row->is_active = $post['is_active'];
             $row->created_at = date("Y-m-d H:i:s");
             $row->save();
@@ -124,7 +127,9 @@ class PlanController extends Controller
             $row->name = trim($post['name']);
             $row->duration = trim($post['duration']);
             $row->amount = trim($post['amount']);
+            $row->whatsapp = trim($post['whatsapp']);
             $row->note = trim($post['note']);
+            $row->is_multiple_file_allow = $post['is_multiple_file_allow'];
             $row->is_active = $post['is_active'];
             $row->updated_at = date("Y-m-d H:i:s");
             $row->save();

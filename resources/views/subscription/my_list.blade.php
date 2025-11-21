@@ -4,12 +4,9 @@
 <div class="page-header">
     <div class="add-item d-flex">
         <div class="page-title">
-            <h4 class="fw-bold">User List</h4>
+            <h4 class="fw-bold">Subscription List</h4>
             <h6></h6>
         </div>
-    </div>
-    <div class="page-btn">
-        <a href="{{ url('users/create') }}" class="btn btn-primary text-white"><i class="ti ti-circle-plus me-1"></i> New User</a>
     </div>
 </div>
 <div class="card">
@@ -26,11 +23,11 @@
                 <thead class="thead-light">
                     <tr>
                         <th width="5%">#</th>
-                        <th width="20%">Name</th>
-                        <th width="20%">Email</th>
-                        <th width="15%">Mobile No.</th>
-                        <th width="15%">Account Status</th>
-                        <th width="15%">Status</th>
+                        <th width="20%">Plan Name</th>
+                        <th width="20%">Amount</th>
+                        <th width="20%">Whatsapp Messages</th>
+                        <th width="15%">Paid Date</th>
+                        <th width="15%">Payment Status</th>
                         <th width="10%" class="no-sort"></th>
                     </tr>
                 </thead>
@@ -45,14 +42,14 @@
 <script src="{{ asset('assets/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
 <script>
-	var page_title = "User List";
+	var page_title = "My Subscription List";
 	$(document).ready(function(){
 		$(document).ready(function(){
 	        $('#tblList').DataTable({
 	            "processing": true,
 	            "serverSide": true,
 	            "ajax": {
-	                "url": "{{ route('admin.users.load') }}",
+	                "url": "{{ route('admin.mysubscriptions.load') }}",
 	                "type": "GET",
 	                "data": function(d) {
 	                    // You can send extra parameters if needed
@@ -64,11 +61,11 @@
 	            "ordering": true,
 	            "columns": [
 	                { data: 'id' },
-	                { data: 'name' },
-	                { data: 'email' },
-	                { data: 'phone' },
-	                { data: 'is_approved' },
-	                { data: 'status' },
+	                { data: 'plan_name' },
+	                { data: 'amount' },
+	                { data: 'whatsapp' },
+	                { data: 'paid_date' },
+	                { data: 'payment_status' },
 	                { 
 	                    data: 'actions', 
 	                    orderable: false, 

@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Message;
+use App\Models\Contact;
 use Auth;
+use DB;
 
 class MessageController extends Controller
 {
     public function index()
     {
-        return view('message.list');
+        $contacts = Contact::select("id","name")->where("is_active",1)->where("created_by",Auth::user()->id)->orderBy("name","asc")->get();
+        return view('message.list',compact('contacts'));
     }
 
     public function load(Request $request)
@@ -35,10 +41,6 @@ class MessageController extends Controller
 
             $formattedData = [];
             foreach ($rows as $index => $row) {
-                $file = "-";
-                if($row->file != "" && file_exists(public_path('uploads/download/'.$row->file))) {
-                    $file = asset('uploads/download/'.$row->file); 
-                }
                 $actions = '<div class="edit-delete-action">';
                     $actions .= '<a href="javascript:;" onclick="remove_row(\'' . url('messages/' . $row->id) . '\')" data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2" title="Delete">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
@@ -53,11 +55,10 @@ class MessageController extends Controller
                     'id' => $start + $index + 1,
                     'name' => $row->contact?->name,
                     'message_type' => $row->message_type == 1 ? "Email" : "Whatsapp",
-                    'content' => $row->content,
                     'is_sent' => $row->is_sent
                         ? '<span class="badge badge-success badge-xs d-inline-flex align-items-center">Sent</span>'
                         : '<span class="badge badge-danger badge-xs d-inline-flex align-items-center">Not Sent</span>',
-                    'sent_on' => date('d M, Y h:i A',strtotime($row->created_at)),
+                    'sent_on' => \Carbon\Carbon::parse($row->created_at)->setTimezone('Asia/Kolkata')->format('d M, Y h:i A'),
                     'actions' => $actions
                 ];
             }
@@ -74,58 +75,33 @@ class MessageController extends Controller
         }
     }
 
-    public function create()
+    public function send(Request $request)
     {
-        $contact = null;
-        return view('contact.add_edit',compact('contact'));
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            $post = $request->all();
-
-            $row = new Contact;
-            $row->name = trim($post['name']);
-            $row->email = trim($post['email']);
-            $row->phone = trim($post['mobile_no']);
-            $row->is_active = $post['is_active'];
-            $row->created_by = Auth::user()->id;
-            $row->created_at = date("Y-m-d H:i:s");
-            $row->save();
-
-            return response()->json(['success' => true,'message' => "Contact added successfully."], 200);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false,'message' => $e->getMessage()], 200);
+        $post = $request->all();
+        if(isset($post["send_to"]) && !empty($post["send_to"])) {
+            $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->whereIn('id', $post['send_to'])->get();
+            if(!$contacts->isEmpty()) {
+                foreach($contacts as $contact) {
+                    Mail::to($contact->email)->send(
+                        new WelcomeMail(
+                            subjectText: $post["subject"],
+                            viewFile: 'email_templates.message',
+                            data: ['content' => $post["content"]]
+                        )
+                    );
+                    $row = new Message;
+                    $row->contact_id = $contact->id;
+                    $row->message_type = $post["message_type"];
+                    $row->subject = $post["subject"];
+                    $row->content = $post["content"];
+                    $row->is_sent = 1;
+                    $row->created_by = Auth::user()->id;
+                    $row->created_at = date("Y-m-d H:i:s");
+                    $row->save();
+                }
+            }
         }
-    }
-
-    public function edit($id)
-    {
-        $contact = Contact::find($id);
-        if(!$contact) {
-            return redirect()->route("admin.dashboard");
-        }
-        return view('contact.add_edit',compact('contact'));   
-    }
-
-    public function update(Request $request,$id)
-    {
-        try {
-            $post = $request->all();
-
-            $row = Contact::find($id);
-            $row->name = trim($post['name']);
-            $row->email = trim($post['email']);
-            $row->phone = trim($post['mobile_no']);
-            $row->is_active = $post['is_active'];
-            $row->updated_at = date("Y-m-d H:i:s");
-            $row->save();
-
-            return response()->json(['success' => true,'message' => "Contact edited successfully."], 200);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false,'message' => $e->getMessage()], 200);
-        }
+        return redirect()->to("messages");
     }
 
     public function destroy($id)

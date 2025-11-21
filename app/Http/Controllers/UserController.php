@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Plan;
+use App\Models\Subscription;
+use Razorpay\Api\Api;
 
 class UserController extends Controller
 {
@@ -61,8 +64,10 @@ class UserController extends Controller
                     'name' => $row->name,
                     'email' => $row->email,
                     'phone' => $row->phone,
-                    'state' => $row->state,
                     'city' => $row->city,
+                    'is_approved' => $row->is_approved
+                        ? '<span class="badge badge-success badge-xs d-inline-flex align-items-center">Approved</span>'
+                        : '<span class="badge badge-danger badge-xs d-inline-flex align-items-center">Not Approved</span>',
                     'status' => $row->is_active
                         ? '<span class="badge badge-success badge-xs d-inline-flex align-items-center">Active</span>'
                         : '<span class="badge badge-danger badge-xs d-inline-flex align-items-center">Inactive</span>',
@@ -85,7 +90,16 @@ class UserController extends Controller
     public function create()
     {
         $user = null;
-        return view('user.add_edit',compact('user'));
+        $plans = Plan::select("id","name","duration","whatsapp")->where("is_active",1)->get();
+
+        // $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        // $orderData = [
+        //     'receipt'         => 'order_'.time(),
+        //     'amount'          => 500 * 100, // Rs 500
+        //     'currency'        => 'INR'
+        // ];
+        // $order = $api->order->create($orderData);
+        return view('user.add_edit',compact('user','plans'));
     }
 
     public function store(Request $request)
@@ -97,13 +111,33 @@ class UserController extends Controller
             $row->name = trim($post['name']);
             $row->email = trim($post['email']);
             $row->phone = trim($post['mobile_no']);
+            $row->contact_person_name = trim($post['contact_person_name']);
+            $row->company_name = trim($post['company_name']);
+            $row->username = trim($post['username']);
+            $row->service_name = trim($post['service_name']);
+            $row->industry = trim($post['industry']);
+            $row->zipcode = trim($post['zipcode']);
             $row->state = trim($post['state']);
             $row->city = trim($post['city']);
+            $row->address = trim($post['address']);
             $row->password = Hash::make(trim($post['password']));
-            $row->is_approved = $post['is_approved'];
-            $row->is_active = $post['is_active'];
+            $row->is_approved = 1;
+            $row->is_active = 1;
             $row->created_at = date("Y-m-d H:i:s");
             $row->save();
+
+            $plan = Plan::select("id","name","amount","duration","whatsapp")->where("is_active",1)->where("id",$post["plan_id"])->first();
+
+            $subscription = new Subscription;
+            $subscription->user_id = $row->id;
+            $subscription->plan_id = $post["plan_id"];
+            $subscription->duration = $plan->duration;
+            $subscription->amount = $plan->amount;
+            $subscription->whatsapp = $plan->whatsapp;
+            $subscription->payment_status = 0;
+            $subscription->is_active = 1;
+            $subscription->created_at = date("Y-m-d H:i:s");
+            $subscription->save();
 
             return response()->json(['success' => true,'message' => "User added successfully."], 200);
         } catch (\Exception $e) {

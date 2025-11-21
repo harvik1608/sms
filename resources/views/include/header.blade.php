@@ -172,6 +172,9 @@
                                         <li class="permission" data-module="plan" data-title="Plan">
                                             <a href="{{ url('plans') }}"><i data-feather="box"></i><span>Plan List</span></a>
                                         </li>
+                                        <li class="permission" data-module="subscription" data-title="Subscription">
+                                            <a href="{{ url('subscriptions') }}"><i data-feather="box"></i><span>Subscription List</span></a>
+                                        </li>
                                     </ul>
                                 </li>
                             @endif
@@ -189,6 +192,14 @@
                                     <ul id="main_menu_list">
                                         <li class="permission" data-module="message" data-title="Message">
                                             <a href="{{ url('messages') }}"><i data-feather="box"></i><span>Message List</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="submenu-open">
+                                    <h6 class="submenu-hdr">Messages</h6>
+                                    <ul id="main_menu_list">
+                                        <li class="permission" data-module="my_subscription" data-title="My Subscription">
+                                            <a href="{{ route('admin.my.subscription') }}"><i data-feather="box"></i><span>My Subscription List</span></a>
                                         </li>
                                     </ul>
                                 </li>

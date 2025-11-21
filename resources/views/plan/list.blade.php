@@ -26,10 +26,11 @@
                 <thead class="thead-light">
                     <tr>
                         <th width="5%">#</th>
-                        <th width="20%">Plan Name</th>
-                        <th width="20%">Plan Duration <small>(in month)</small></th>
-                        <th width="10%">Plan Amount</th>
-                        <th width="10%">Status</th>
+                        <th width="15%">Plan Name</th>
+                        <th width="15%">Plan Duration <small>(in month)</small></th>
+                        <th width="15%">Plan Amount</th>
+                        <th width="20%">Total Whatsapp Message</th>
+                        <th width="15%">Status</th>
                         <th width="10%" class="no-sort"></th>
                     </tr>
                 </thead>
@@ -66,6 +67,7 @@
 	                { data: 'name' },
 	                { data: 'duration' },
 	                { data: 'amount' },
+	                { data: 'whatsapp' },
 	                { data: 'status' },
 	                { 
 	                    data: 'actions', 
