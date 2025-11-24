@@ -24,39 +24,26 @@
 						<div class="card-body">
 							<div class="app-brand justify-content-center">
 								<a href="index-2.html" class="app-brand-link gap-2">
-									<span class="app-brand-text demo text-heading fw-bold">{{ config('constant.app_name') }}</span>
+									<span class="app-brand-text demo text-heading fw-bold">Forget Password</span>
 								</a>
 							</div>
-							<!-- <h4 class="mb-1">Sign In! 👋</h4> -->
-							<p class="mb-6">Please sign-in to your account and start the adventure</p>
-							<form id="formAuthentication" class="mb-6" action="{{ route('check.login') }}" method="POST">
+							<p class="mb-6"></p>
+							<form id="formAuthentication" class="mb-6" action="{{ route('check.forget.password') }}" method="POST">
 								@csrf
 								<div class="mb-6">
 									<label for="email" class="form-label">Email</label>
 									<input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" required autofocus />
 								</div>
-								<div class="mb-6 form-password-toggle">
-									<label class="form-label" for="password">Password</label>
-									<div class="input-group input-group-merge">
-										<input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" aria-describedby="password" required />
-										<span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-									</div>
-								</div>
 								<div class="mb-6">
-									<button class="btn btn-primary d-grid w-100" type="submit">Sign In</button>
+									<button class="btn btn-primary d-grid w-100" type="submit">Submit</button>
 									<!-- <div class="spinner-border spinner-border-sm text-secondary" role="status">
 										<span class="visually-hidden">Loading...</span>
 							        </div> -->
 								</div>
-								<a href="{{ route('forget.password') }}" style="float: right;"><span>Forgot Password?</span></a>
+								<a href="{{ route('login') }}" style="float: right;"><span>Back to Login</span></a>
 								@if ($errors->has('error'))
 							    	<div class="alert alert-danger" hidden>
 							        	{{ $errors->first('error') }}
-							    	</div>
-								@endif
-								@if ($errors->has('success'))
-							    	<div class="alert alert-success" hidden>
-							        	{{ $errors->first('success') }}
 							    	</div>
 								@endif
 							</form>
@@ -73,9 +60,6 @@
 	    	$(document).ready(function(){
 	    		if($(".alert-danger").length > 0) {
 	    			show_toast("Oops!",$(".alert-danger").text(),"error");
-	    		}
-	    		if($(".alert-success").length > 0) {
-	    			show_toast("Success!",$(".alert-success").text(),"success");
 	    		}
 	    	});
 	    	function show_toast(title,msg,type,second = 3000)

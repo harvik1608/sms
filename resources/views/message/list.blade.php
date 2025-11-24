@@ -45,7 +45,7 @@
 		<div class="modal-content">
 			<div class="page-wrapper-new p-0">
 				<div class="content">
-					<form action="{{ route('admin.message.send') }}" method="POST" enctype="multipart/form-data">
+					<form action="{{ route('admin.message.send') }}" method="POST" enctype="multipart/form-data" id="mainForm">
 						@csrf
 						<div class="modal-header">
 							<div class="page-title">
@@ -67,6 +67,7 @@
                                             @endforeach
                                         @endif
 		                            </select>
+                                    <small id="send_to-error"></small>
 		                        </div>
                                 <div class="col-lg-12 mb-3">
                                     <label class="form-label">Message Type</label>
@@ -79,16 +80,18 @@
 								<div class="col-lg-12 mb-3 subject">
 		                            <label class="form-label">Subject<span class="text-danger ms-1">*</span></label>
 		                            <input type="text" class="form-control" name="subject" id="subject" />
+                                    <small id="subject-error"></small>
 		                        </div>
 		                        <div class="col-lg-12 mb-3">
 		                            <label class="form-label">Message<span class="text-danger ms-1">*</span></label>
 		                            <textarea class="form-control" name="content" id="content" rows="5"></textarea>
+                                    <small id="content-error"></small>
 		                        </div>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn me-2 btn-secondary fs-13 fw-medium p-2 px-3 shadow-none" data-bs-dismiss="modal">Cancel</button>
-							<button type="submit" class="btn btn-primary fs-13 fw-medium p-2 px-3">Send</button>
+							<!-- <button type="submit" class="btn btn-primary fs-13 fw-medium p-2 px-3">Send</button> -->
 						</div>
 					</form>
 				</div>
@@ -99,6 +102,7 @@
 <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script>
 	var page_title = "Message List";
 	$(document).ready(function(){
@@ -154,28 +158,30 @@
         		$(".subject").show(500);
         	}
         });
-        $("#mainForm").validate({
-            rules:{
-                name:{
-                    required: true
-                },
-                email:{
-                    required: true
-                },
-                mobile_no:{
-                    required: true
-                }
-            },
-            messages:{
-                name:{
-                    required: "<small class='text-danger'><b>Name is required.</b></small>"
-                },
-                email:{
-                    required: "<small class='text-danger'><b>Email is required.</b></small>"
-                },
-                mobile_no:{
-                    required: "<small class='text-danger'><b>Whatsapp No. is required.</b></small>"
-                }
+        $("#mainForm").submit(function(e){
+            var isError = 0;
+            if($("#send_to").val() == "") {
+                isError = 1;
+                $("#send_to-error").html("Please choose at least one sender");
+            } else {
+                $("#send_to-error").html("");
+            }
+            if($("#message_type").val() != 2) {
+                if($("#subject").val() == "") {
+                    isError = 1;
+                    $("#subject-error").html("Please enter subject");
+                } else {
+                    $("#subject-error").html("");
+                }    
+            }
+            if($("#content").val() == "") {
+                isError = 1;
+                $("#content-error").html("Please enter message");
+            } else {
+                $("#content-error").html("");
+            }
+            if(isError > 0) {
+                return false;
             }
         });
     });

@@ -16,6 +16,26 @@ class MessageController extends Controller
 {
     public function index()
     {
+        // $post = [
+        //     'key' => '469242512BCE0C',
+        //     'contacts' => '9714191947',
+        //     'msg' => 'hello this is from tega bulk connect',  // No need for urlencode here as HTTP Client handles it
+        //     'country_code' => '91',
+        // ];
+
+        // // Make a POST request
+        // $response = Http::asForm()->post('http://itswhatsapp.com/wapi/index', $post);
+
+        // // Check if the response is successful and handle accordingly
+        // if ($response->successful()) {
+        //     // You can process the response
+        //     echo $response->body();
+        // } else {
+        //     // Handle errors
+        //     echo 'Error: ' . $response->status();
+        // }
+        // exit;
+
         $contacts = Contact::select("id","name")->where("is_active",1)->where("created_by",Auth::user()->id)->orderBy("name","asc")->get();
         return view('message.list',compact('contacts'));
     }
@@ -79,25 +99,71 @@ class MessageController extends Controller
     {
         $post = $request->all();
         if(isset($post["send_to"]) && !empty($post["send_to"])) {
-            $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->whereIn('id', $post['send_to'])->get();
-            if(!$contacts->isEmpty()) {
-                foreach($contacts as $contact) {
-                    Mail::to($contact->email)->send(
-                        new WelcomeMail(
-                            subjectText: $post["subject"],
-                            viewFile: 'email_templates.message',
-                            data: ['content' => $post["content"]]
-                        )
-                    );
-                    $row = new Message;
-                    $row->contact_id = $contact->id;
-                    $row->message_type = $post["message_type"];
-                    $row->subject = $post["subject"];
-                    $row->content = $post["content"];
-                    $row->is_sent = 1;
-                    $row->created_by = Auth::user()->id;
-                    $row->created_at = date("Y-m-d H:i:s");
-                    $row->save();
+            if (in_array('all', $post['send_to'])) {
+                $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->where('created_by', Auth::user()->id)->get();
+                preview($contacts->toArray());
+                if(!$contacts->isEmpty()) {
+                    foreach($contacts as $contact) {
+                        if($post["message_type"] == 1) {
+                            Mail::to($contact->email)->send(
+                                new WelcomeMail(
+                                    subjectText: $post["subject"],
+                                    viewFile: 'email_templates.message',
+                                    data: ['content' => $post["content"]]
+                                )
+                            );
+                            $row = new Message;
+                            $row->contact_id = $contact->id;
+                            $row->message_type = $post["message_type"];
+                            $row->subject = $post["subject"];
+                            $row->content = $post["content"];
+                            $row->is_sent = 1;
+                            $row->created_by = Auth::user()->id;
+                            $row->created_at = date("Y-m-d H:i:s");
+                            $row->save();
+                        } else if($post["message_type"] == 2) {
+                            //
+                        } else {
+                            Mail::to($contact->email)->send(
+                                new WelcomeMail(
+                                    subjectText: $post["subject"],
+                                    viewFile: 'email_templates.message',
+                                    data: ['content' => $post["content"]]
+                                )
+                            );
+                            $row = new Message;
+                            $row->contact_id = $contact->id;
+                            $row->message_type = $post["message_type"];
+                            $row->subject = $post["subject"];
+                            $row->content = $post["content"];
+                            $row->is_sent = 1;
+                            $row->created_by = Auth::user()->id;
+                            $row->created_at = date("Y-m-d H:i:s");
+                            $row->save();
+                        }
+                    }
+                }
+            } else {
+                $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->whereIn('id', $post['send_to'])->get();
+                if(!$contacts->isEmpty()) {
+                    foreach($contacts as $contact) {
+                        Mail::to($contact->email)->send(
+                            new WelcomeMail(
+                                subjectText: $post["subject"],
+                                viewFile: 'email_templates.message',
+                                data: ['content' => $post["content"]]
+                            )
+                        );
+                        $row = new Message;
+                        $row->contact_id = $contact->id;
+                        $row->message_type = $post["message_type"];
+                        $row->subject = $post["subject"];
+                        $row->content = $post["content"];
+                        $row->is_sent = 1;
+                        $row->created_by = Auth::user()->id;
+                        $row->created_at = date("Y-m-d H:i:s");
+                        $row->save();
+                    }
                 }
             }
         }

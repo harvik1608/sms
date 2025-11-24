@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Subscription;
 use Auth;
@@ -42,7 +43,7 @@ class SubscriptionController extends Controller
                     $file = asset('uploads/download/'.$row->file); 
                 }
                 $actions = '<div class="edit-delete-action">';
-                    $actions .= '<a href="' . url('plans/'.$row->id.'/edit/') . '" class="me-2 edit-icon p-2 text-success" title="View"><i class="fa fa-eye"></i></a>';
+                $actions .= '<a href="' . route('invoice.download',['id' => $row->id]) . '" class="me-2 edit-icon p-2 text-success" title="View"><i class="fa fa-download"></i></a>';
                 $actions .= '</div>';
                 $formattedData[] = [
                     'id' => $start + $index + 1,
@@ -100,7 +101,7 @@ class SubscriptionController extends Controller
                     $file = asset('uploads/download/'.$row->file); 
                 }
                 $actions = '<div class="edit-delete-action">';
-                    $actions .= '<a href="' . url('plans/'.$row->id.'/edit/') . '" class="me-2 edit-icon p-2 text-success" title="View"><i class="fa fa-eye"></i></a>';
+                $actions .= '<a href="' . route('invoice.download',['id' => $row->id]) . '" class="me-2 edit-icon p-2 text-success" title="View"><i class="fa fa-download"></i></a>';
                 $actions .= '</div>';
                 $formattedData[] = [
                     'id' => $start + $index + 1,
@@ -125,6 +126,20 @@ class SubscriptionController extends Controller
             return response()->json([
                 'error' => 'Server Error: ' . $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function download($id)
+    {
+        $invoice = Subscription::with('customer','plan')->find($id);
+        if(Auth::user()->role == 1) {
+            $pdf = Pdf::loadView('email_templates.invoice', compact('invoice'));
+            return $pdf->download('invoice-'.$invoice->id.'.pdf');
+        } else {
+            if(Auth::user()->id == $invoice->user_id) {
+                $pdf = Pdf::loadView('email_templates.invoice', compact('invoice'));
+                return $pdf->download('invoice-'.$invoice->id.'.pdf');
+            }
         }
     }
 }

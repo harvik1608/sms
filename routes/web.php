@@ -11,6 +11,10 @@
 
     Route::get('/', [AuthController::class, 'index'])->name('login');
     Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('check.login');
+    Route::get('/forget-password', [AuthController::class, 'forgetPassword'])->name('forget.password');
+    Route::post('/submit-forget-password', [AuthController::class, 'submitForgetPassword'])->name('check.forget.password');
+    Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password');
+    Route::post('/submit-reset-password', [AuthController::class, 'submitResetPassword'])->name('submit.reset.password');
     Route::post('/pay', [PaymentController::class, 'createOrder'])->name('create.order');
     Route::post('/payment/verify', [PaymentController::class, 'verify'])->name('payment.verify');
     Route::get('/get-plan-amount/{id}', function ($id) {
@@ -33,6 +37,7 @@
         Route::get('/load-subscriptions', [SubscriptionController::class, 'load'])->name('admin.subscriptions.load');
         Route::get('/my-subscriptions', [SubscriptionController::class, 'subscriptions'])->name('admin.my.subscription');
         Route::get('/load-mysubscriptions', [SubscriptionController::class, 'my_subscription'])->name('admin.mysubscriptions.load');
+        Route::get('/invoice/{id}', [SubscriptionController::class, 'download'])->name('invoice.download');
 
         Route::resource('contacts', ContactController::class);
         Route::get('/load-contacts', [ContactController::class, 'load'])->name('admin.contacts.load');
@@ -42,5 +47,9 @@
         Route::get('/load-messages', [MessageController::class, 'load'])->name('admin.messages.load');
         Route::post('/message-send', [MessageController::class, 'send'])->name('admin.message.send');
 
+        Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+        Route::post('/submit-profile', [AuthController::class, 'submitProfile'])->name('submit.profile');
+        Route::get('/change-password', [AuthController::class, 'changePassword'])->name('change.password');
+        Route::post('/submit-change-password', [AuthController::class, 'submitChangePassword'])->name('submit.change.password');
         Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });
