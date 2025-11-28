@@ -8,6 +8,8 @@
     use App\Http\Controllers\MessageController;
     use App\Http\Controllers\PaymentController;
     use App\Http\Controllers\SubscriptionController;
+    use App\Http\Controllers\StateController;
+    use App\Http\Controllers\CityController;
 
     Route::get('/', [AuthController::class, 'index'])->name('login');
     Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('check.login');
@@ -21,14 +23,26 @@
         $plan = \App\Models\Plan::findOrFail($id);
         return response()->json(['amount' => $plan->amount,'whatsapp' => $plan->whatsapp,'duration' => $plan->duration]);
     });
+    Route::get('/get-cities', function (\Illuminate\Http\Request $request) {
+        $id = $request->stateId;
+        $cities = \App\Models\City::select("id","name")->where("state_id",$id)->orderBy("name","asc")->get();
+        return response()->json(['cities' => $cities]);
+    });
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('/general-settings', [DashboardController::class, 'general_settings'])->name('admin.general-settings');
         Route::get('/download-sample', [ContactController::class, 'downloadSample'])->name('admin.download.sample');
 
+        Route::resource('states', StateController::class);
+        Route::get('/load-states', [StateController::class, 'load'])->name('admin.states.load');
+
+        Route::resource('cities', CityController::class);
+        Route::get('/load-cities', [CityController::class, 'load'])->name('admin.cities.load');
+
         Route::resource('users', UserController::class);
         Route::get('/load-users', [UserController::class, 'load'])->name('admin.users.load');
+        Route::get('/approve/{id}', [UserController::class, 'approve'])->name('user.approve');
 
         Route::resource('plans', PlanController::class);
         Route::get('/load-plans', [PlanController::class, 'load'])->name('admin.plans.load');

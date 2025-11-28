@@ -13,40 +13,61 @@
                 <form id="mainForm" method="POST" action="{{ route('submit.profile') }}">
                     @csrf
                     <div class="row">
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="mb-3">
                                 <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" value="{{ $user->name }}" id="name" name="name" />
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="mb-3">
                                 <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" value="{{ $user->email }}" id="email" name="email" />
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="mb-3">
                                 <label class="form-label">Mobile No.<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" value="{{ $user->phone }}" id="mobile_no" name="phone" />
                             </div>
                         </div>
-                        <div class="col-lg-8 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="mb-3">
-                                <label class="form-label">Company Name<span class="text-danger ms-1">*</span></label>
+                                <label class="form-label">Business Name<span class="text-danger ms-1">*</span></label>
                                 <input type="text" class="form-control" value="{{ $user->company_name }}" id="company_name" name="company_name" />
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="mb-3">
-                                <label class="form-label">State<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="{{ $user->state }}" id="state" name="state" />
+                                <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" value="{{ $user->address }}" id="address" name="address" />
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="mb-3">
+                                <label class="form-label">State<span class="text-danger ms-1">*</span></label>
+                                <select class="select" name="state" id="state" data-url="{{ url('/get-cities') }}">
+                                    <option value="">Choose State</option>
+                                    @if(!$states->isEmpty())
+                                        @foreach($states as $state)
+                                            @if($user->state == $state->id)
+                                                <option value="{{ $state->id }}" selected>{{ $state->name }}</option>
+                                            @else 
+                                                <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <label id="state-error" class="error" for="state"></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-12">
                             <div class="mb-3">
                                 <label class="form-label">City<span class="text-danger ms-1">*</span></label>
-                                <input type="text" class="form-control" value="{{ $user->city }}" id="city" name="city" />
+                                <select class="select" name="city" id="city">
+                                    <option value="">Choose City</option>
+                                </select>
+                                <label id="city-error" class="error" for="city"></label>
                             </div>
                         </div>
                         <div class="col-12 d-flex justify-content-end">
@@ -70,6 +91,18 @@
                 },
                 phone:{
                     required: true
+                },
+                company_name:{
+                    required: true
+                },
+                address:{
+                    required: true
+                },
+                state:{
+                    required: true
+                },
+                city:{
+                    required: true
                 }
             },
             messages:{
@@ -80,7 +113,19 @@
                     required: "<small class='text-danger'><b>Email is required.</b></small>"
                 },
                 phone:{
-                    required: "<small class='text-danger'><b>Whatsapp No. is required.</b></small>"
+                    required: "<small class='text-danger'><b>Mobile No. is required.</b></small>"
+                },
+                company_name:{
+                    required: "<small class='text-danger'><b>Business Name is required.</b></small>"
+                },
+                address:{
+                    required: "<small class='text-danger'><b>Address is required.</b></small>"
+                },
+                state:{
+                    required: "<small class='text-danger'><b>State is required.</b></small>"
+                },
+                city:{
+                    required: "<small class='text-danger'><b>City is required.</b></small>"
                 }
             }
         });

@@ -96,7 +96,7 @@
                         <!-- /Search -->
                         <li class="nav-item nav-item-box">
                             @if(Auth::user()->role == 1)
-                                <a href="{{ route('admin.general-settings') }}"><i class="ti ti-settings"></i></a>
+                                <!-- <a href="{{ route('admin.general-settings') }}"><i class="ti ti-settings"></i></a> -->
                             @endif
                         </li>
                         <li class="nav-item dropdown has-arrow main-drop profile-nav">
@@ -159,6 +159,17 @@
                                 </ul>
                             </li>
                             @if(Auth::user()->role == 1)
+                                <li class="submenu-open">
+                                    <h6 class="submenu-hdr">General</h6>
+                                    <ul id="main_menu_list">
+                                        <li class="permission" data-module="state" data-title="State">
+                                            <a href="{{ url('states') }}"><i data-feather="box"></i><span>State List</span></a>
+                                        </li>
+                                        <li class="permission" data-module="city" data-title="City">
+                                            <a href="{{ url('cities') }}"><i data-feather="box"></i><span>City List</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <li class="submenu-open">
                                     <h6 class="submenu-hdr">User</h6>
                                     <ul id="main_menu_list">

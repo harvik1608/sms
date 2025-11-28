@@ -12,6 +12,13 @@
         <img src="{{ asset('assets/img/welcome-bg-01.svg') }}" alt="img" class="welcome-bg-03">
     </div>
 </div>
+@if($message != "")
+    <div class="alert bg-orange-transparent alert-dismissible fade show mb-4">
+        <div>
+            <span><i class="ti ti-info-circle fs-14 text-orange me-2"></i><span class="text-orange fw-semibold"> {{ $message }} </span>
+        </div>
+    </div>
+@endif
 <script>
 	var page_title = "Dashboard";
 </script>

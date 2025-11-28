@@ -11,7 +11,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $message = "";
+        if(Auth::user()->is_approved == 0) {
+            $message = "Your account has not been approved at this time. You will be able to send messages after it is approved.";
+        }
+        return view('dashboard',compact('message'));
     }
 
     public function general_settings()

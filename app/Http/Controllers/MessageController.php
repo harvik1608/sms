@@ -35,7 +35,6 @@ class MessageController extends Controller
         //     echo 'Error: ' . $response->status();
         // }
         // exit;
-
         $contacts = Contact::select("id","name")->where("is_active",1)->where("created_by",Auth::user()->id)->orderBy("name","asc")->get();
         return view('message.list',compact('contacts'));
     }
@@ -101,7 +100,7 @@ class MessageController extends Controller
         if(isset($post["send_to"]) && !empty($post["send_to"])) {
             if (in_array('all', $post['send_to'])) {
                 $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->where('created_by', Auth::user()->id)->get();
-                preview($contacts->toArray());
+                // preview($contacts->toArray());
                 if(!$contacts->isEmpty()) {
                     foreach($contacts as $contact) {
                         if($post["message_type"] == 1) {

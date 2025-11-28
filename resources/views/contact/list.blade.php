@@ -9,8 +9,8 @@
         </div>
     </div>
     <div class="page-btn">
-        <a href="{{ url('contacts/create') }}" class="btn btn-primary text-white"><i class="ti ti-circle-plus me-1"></i> New Contact</a>
-        <a href="javascript:;" onclick="open_modal()" class="btn btn-secondary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download me-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Import Contact</a>
+    	<a href="javascript:;" onclick="open_modal()" class="btn btn-secondary text-white">Import Contact</a>
+        <a href="{{ url('contacts/create') }}" class="btn btn-primary text-white">New Contact</a>
     </div>
 </div>
 <div class="card">
@@ -62,7 +62,7 @@
 									<div class="row">
 										<div>
 											<div class="modal-footer-btn download-file">
-												<a href="{{ route('admin.download.sample') }}" class="btn btn-submit">Download Sample File</a>
+												<a href="{{ route('admin.download.sample') }}" class="btn btn-secondary">Download Sample File</a>
 											</div>
 										</div>
 									</div>
@@ -71,7 +71,7 @@
 									<div class="mb-3 image-upload-down">
 										<label class="form-label">Upload CSV File</label>
 										<div class="image-upload download">
-											<input type="file" name="csv_file" id="csv_file" />
+											<input type="file" name="csv_file" id="csv_file" required />
 											<div class="image-uploads">
 												<img src="{{ asset('assets/img/download-img.png') }}" alt="img">
 												<h4>Choose <span> a file</span></h4>
@@ -97,54 +97,52 @@
 <script>
 	var page_title = "Contact List";
 	$(document).ready(function(){
-		$(document).ready(function(){
-	        $('#tblList').DataTable({
-	            "processing": true,
-	            "serverSide": true,
-	            "ajax": {
-	                "url": "{{ route('admin.contacts.load') }}",
-	                "type": "GET",
-	                "data": function(d) {
-	                    // You can send extra parameters if needed
-	                    // d.extraParam = 'value';
-	                }
-	            },
-	            "bFilter": true,
-	            "sDom": 'fBtlpi',
-	            "ordering": true,
-	            "columns": [
-	                { data: 'id' },
-	                { data: 'name' },
-	                { data: 'email' },
-	                { data: 'phone' },
-	                { data: 'status' },
-	                { 
-	                    data: 'actions', 
-	                    orderable: false, 
-	                    searchable: false,
-	                    createdCell: function(td, cellData, rowData, row, col) {
-	                        $(td).addClass('action-table-data'); // Add custom class to <td>
-	                    }
-	                }
-	            ],
-	            "language": {
-	                search: ' ',
-	                sLengthMenu: '_MENU_',
-	                searchPlaceholder: "Search",
-	                // sLengthMenu: 'Row Per Page _MENU_ Entries',
-	                info: "_START_ - _END_ of _TOTAL_ items",
-	                paginate: {
-	                    next: ' <i class="fa fa-angle-right"></i>',
-	                    previous: '<i class="fa fa-angle-left"></i>'
-	                },
-	            },
-	            initComplete: (settings, json) => {
-	                $('.dataTables_filter').appendTo('#tableSearch');
-	                $('.dataTables_filter').appendTo('.search-input');
-	            }  
-	        });
-	    });
-	});
+        $('#tblList').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('admin.contacts.load') }}",
+                "type": "GET",
+                "data": function(d) {
+                    // You can send extra parameters if needed
+                    // d.extraParam = 'value';
+                }
+            },
+            "bFilter": true,
+            "sDom": 'fBtlpi',
+            "ordering": true,
+            "columns": [
+                { data: 'id' },
+                { data: 'name' },
+                { data: 'email' },
+                { data: 'phone' },
+                { data: 'status' },
+                { 
+                    data: 'actions', 
+                    orderable: false, 
+                    searchable: false,
+                    createdCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('action-table-data'); // Add custom class to <td>
+                    }
+                }
+            ],
+            "language": {
+                search: ' ',
+                sLengthMenu: '_MENU_',
+                searchPlaceholder: "Search",
+                // sLengthMenu: 'Row Per Page _MENU_ Entries',
+                info: "_START_ - _END_ of _TOTAL_ items",
+                paginate: {
+                    next: ' <i class="fa fa-angle-right"></i>',
+                    previous: '<i class="fa fa-angle-left"></i>'
+                },
+            },
+            initComplete: (settings, json) => {
+                $('.dataTables_filter').appendTo('#tableSearch');
+                $('.dataTables_filter').appendTo('.search-input');
+            }  
+        });
+    });
 	function open_modal()
     {
     	$("#import-sites").modal("show");

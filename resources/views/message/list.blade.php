@@ -8,9 +8,11 @@
             <h6></h6>
         </div>
     </div>
-    <div class="page-btn">
-        <a href="javascript:;" onclick="open_modal()" class="btn btn-secondary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download me-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Send Message</a>
-    </div>
+    @if(Auth::user()->is_approved == 1)
+        <div class="page-btn">
+            <a href="javascript:;" onclick="open_modal()" class="btn btn-secondary text-white">Send Message</a>
+        </div>
+    @endif
 </div>
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
@@ -91,7 +93,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn me-2 btn-secondary fs-13 fw-medium p-2 px-3 shadow-none" data-bs-dismiss="modal">Cancel</button>
-							<!-- <button type="submit" class="btn btn-primary fs-13 fw-medium p-2 px-3">Send</button> -->
+							<button type="submit" class="btn btn-primary fs-13 fw-medium p-2 px-3">Send</button>
 						</div>
 					</form>
 				</div>
@@ -152,7 +154,7 @@
             }  
         });
         $("#message_type").change(function(){
-        	if($(this).val() == "whatsapp") {
+        	if($(this).val() == "2") {
         		$(".subject").hide(500);
         	} else {
         		$(".subject").show(500);
@@ -162,7 +164,7 @@
             var isError = 0;
             if($("#send_to").val() == "") {
                 isError = 1;
-                $("#send_to-error").html("Please choose at least one sender");
+                $("#send_to-error").html("Please choose at least one contact");
             } else {
                 $("#send_to-error").html("");
             }

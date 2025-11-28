@@ -36,59 +36,9 @@ $(document).ready(function(){
 	        $(this).addClass("active");
 	    }
 	});
-
-	$("#contactForm").submit(function(e){
-		e.preventDefault();
-
-		var isError = 0;
-		if($("#contactForm #name").val().trim() == "") {
-			isError = 1;
-			$(".name-error").html("<small><i class='fas fa-warning'></i> Enter your name</small>");
-		} else {
-			$(".name-error").html("");
-		}
-		if($("#contactForm #email").val().trim() == "") {
-			isError = 1;
-			$(".email-error").html("<small><i class='fas fa-warning'></i> Enter your email</small>");
-		} else {
-			$(".email-error").html("");
-		}
-		if($("#contactForm #phone").val().trim() == "") {
-			isError = 1;
-			$(".phone-error").html("<small><i class='fas fa-warning'></i> Enter your phone</small>");
-		} else {
-			$(".phone-error").html("");
-		}
-		if($("#contactForm #message").val().trim() == "") {
-			isError = 1;
-			$(".message-error").html("<small><i class='fas fa-warning'></i> Enter your message</small>");
-		} else {
-			$(".message-error").html("");
-		}
-
-		if(isError == 0) {
-			$.ajax({
-				url: $("#contactForm").attr("action"),
-				type: $("#contactForm").attr("method"),
-				data: new FormData(this),
-				processData: false,
-				contentType: false,
-				cache: false,
-				beforeSend:function(){
-					$("#contactForm button[type=submit]").text("Submitting").attr("disabled",true);
-				},
-				success:function(response) {
-					if(response.status == 200) {
-						$("#contactForm button[type=submit]").text("Submit").attr("disabled",false);
-						$("#msgSubmit").html(response.message);
-						setTimeout(function(){
-							$("#msgSubmit").html("");
-							$("#name,#email,#phone,#message").val("");
-						},3000);
-					}
-				}
-			});
-		}
+	$('#state').change(function () {
+		let baseUrl = $('#state').data('url');
+	    get_cities(baseUrl,$(this).val());
 	});
 });
 function remove_row(deleteUrl)
@@ -125,6 +75,28 @@ function remove_row(deleteUrl)
             cancel: function () {
                 
             }
+        }
+    });
+}
+function get_cities(ajaxUrl,stateId,cityId = 0)
+{
+	$.ajax({
+        url: ajaxUrl,
+        type: "GET",
+        data:{
+        	stateId: stateId
+        },
+        success: function (res) {
+            $('#city').empty(); 
+            $('#city').append('<option value="">Choose City</option>');
+
+            $.each(res.cities, function (key, city) {
+            	if(cityId == city.id) {
+            		$('#city').append('<option value="' + city.id + '" selected>' + city.name + '</option>');
+            	} else {
+            		$('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+            	}
+            });
         }
     });
 }

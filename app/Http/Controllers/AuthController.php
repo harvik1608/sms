@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\WelcomeMail;
 use App\Models\User;
+use App\Models\State;
 use Auth;
 
 class AuthController extends Controller
@@ -39,8 +40,9 @@ class AuthController extends Controller
 
     public function profile()
     {
-        $user = User::find(Auth::user()->id);
-        return view('profile',compact('user'));
+        $user = Auth::user();
+        $states = State::select("id","name")->where("is_active",1)->orderBy("name","asc")->get();
+        return view('profile',compact('user','states'));
     }
 
     public function submitProfile(Request $request)
@@ -62,6 +64,10 @@ class AuthController extends Controller
             $row->name = trim($post['name']);
             $row->email = trim($post['email']);
             $row->phone = trim($post['phone']);
+            $row->company_name = trim($post['company_name']);
+            $row->address = trim($post['address']);
+            $row->state = trim($post['state']);
+            $row->city = trim($post['city']);
             $row->updated_at = date("Y-m-d H:i:s");
             $row->save();
 

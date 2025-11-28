@@ -13,60 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 let isError = 0;
 
                 // List all fields to validate
-                const fields = ["name", "mobile_no", "address", "state", "city"];
+                const fields = ["name","company_name","email","mobile_no","password","state", "city","address"];
 
                 fields.forEach(id => {
                     let value = $.trim($("#" + id).val());
                     if (value === "") {
                         isError = 1;
-                        $("#" + id + "-error").html("Please enter " + id.replace("_", " ") + ".");
-                    } else {
-                        $("#" + id + "-error").html("");
-                    }
-                });
-
-                if (isError === 1) {
-                    // stop tab change
-                    event.preventDefault();
-                    return false;
-                }
-
-                // allow tab to switch
-                tabTrigger.show();
-            } else if(section === "Whatsapp") {
-                let isError = 0;
-
-                // List all fields to validate
-                const fields = ["contact_person_name", "company_name", "industry", "service_name", "zipcode"];
-
-                fields.forEach(id => {
-                    let value = $.trim($("#" + id).val());
-                    if (value === "") {
-                        isError = 1;
-                        $("#" + id + "-error").html("Please enter " + id.replace("_", " ") + ".");
-                    } else {
-                        $("#" + id + "-error").html("");
-                    }
-                });
-
-                if (isError === 1) {
-                    // stop tab change
-                    event.preventDefault();
-                    return false;
-                }
-
-                // allow tab to switch
-                tabTrigger.show();
-            } else if(section === "Email") {
-                let isError = 0;
-
-                // List all fields to validate
-                const fields = ["email", "username", "password"];
-                fields.forEach(id => {
-                    let value = $.trim($("#" + id).val());
-                    if (value === "") {
-                        isError = 1;
-                        $("#" + id + "-error").html("Please enter " + id.replace("_", " ") + ".");
+                        $("#" + id + "-error").html(id.replace("_", " ")+" is required.");
                     } else {
                         $("#" + id + "-error").html("");
                     }

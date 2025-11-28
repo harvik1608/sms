@@ -7,7 +7,7 @@
         <h6>(<span class='mandadory'>*</span>) indicates required field.</h6>
     </div>
 </div>
-<form action="{{ is_null($user) ? url('users') : url('users/'.$user->id) }}" method="POST" enctype="multipart/form-data" id="mainForm">
+<form action="{{ url('users')) }}" method="POST" enctype="multipart/form-data" id="mainForm">
     @csrf
     @if(!is_null($user))
         <input type="hidden" name="_method" value="PUT" />
@@ -30,22 +30,6 @@
                                 <small>Personal Details</small>
                             </li>
                             <li class="nav-item">
-                                <a href="#progress-company-document" class="nav-link bg-transparent" data-section="Whatsapp" data-toggle="tab">
-                                    <div class="step-icon">
-                                        <i class="fas fa-phone"></i>
-                                    </div>
-                                </a>
-                                <small>Whatsapp Details</small>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#progress-login-detail" class="nav-link bg-transparent" data-section="Email" data-toggle="tab">
-                                    <div class="step-icon">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                </a>
-                                <small>Login Details</small>
-                            </li>
-                            <li class="nav-item">
                                 <a href="#progress-payment-detail" class="nav-link bg-transparent" data-section="Payment" data-toggle="tab">
                                     <div class="step-icon">
                                         <i class="fas fa-credit-card"></i>
@@ -65,10 +49,20 @@
                                         <h5>Personal Details</h5>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-6 mb-3">
+                                        <div class="col-lg-4 mb-3">
                                             <label for="progresspill-firstname-input" class="form-label">Name<span class="text-danger ms-1">*</span></label>
                                             <input type="text" class="form-control" name="name" id="name" value="{{ is_null($user) ? '' : $user->name }}" />
                                             <small id="name-error"></small>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <label for="progresspill-firstname-input" class="form-label">Business Name<span class="text-danger ms-1">*</span></label>
+                                            <input type="text" class="form-control" name="company_name" id="company_name" value="{{ is_null($user) ? '' : $user->company_name }}" />
+                                            <small id="company_name-error"></small>
+                                        </div>
+                                        <div class="col-lg-4 mb-3">
+                                            <label for="progresspill-firstname-input" class="form-label">Email<span class="text-danger ms-1">*</span></label>
+                                            <input type="text" class="form-control" name="email" id="email" value="{{ is_null($user) ? '' : $user->email }}" />
+                                            <small id="email-error"></small>
                                         </div>
                                         <div class="col-lg-2 mb-3">
                                             <label class="form-label">Mobile No.<span class="text-danger ms-1">*</span></label>
@@ -76,75 +70,37 @@
                                             <small id="mobile_no-error"></small>
                                         </div>
                                         <div class="col-lg-2 mb-3">
+                                            <label class="form-label">Password<span class="text-danger ms-1">*</span></label>
+                                            <input type="text" class="form-control" name="password" id="password" value="" />
+                                            <small id="password-error"></small>
+                                        </div>
+                                        <div class="col-lg-2 mb-3">
                                             <label class="form-label">State<span class="text-danger ms-1">*</span></label>
-                                            <input type="text" class="form-control" name="state" id="state" value="{{ is_null($user) ? 'Maharasthra' : $user->state }}" />
+                                            <select class="select" name="state" id="state" data-url="{{ url('/get-cities') }}">
+                                                <option value="">Choose State</option>
+                                                @if(!$states->isEmpty())
+                                                    @foreach($states as $state)
+                                                        @if(!is_null($user) && $user->state == $state->id)
+                                                            <option value="{{ $state->id }}" selected>{{ $state->name }}</option>
+                                                        @else 
+                                                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                             <small id="state-error"></small>
                                         </div>
                                         <div class="col-lg-2 mb-3">
                                             <label class="form-label">City<span class="text-danger ms-1">*</span></label>
-                                            <input type="text" class="form-control" name="city" id="city" value="{{ is_null($user) ? '' : $user->city }}" />
+                                            <select class="select" name="city" id="city">
+                                                <option value="">Choose City</option>
+                                            </select>
                                             <small id="city-error"></small>
                                         </div>
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-4 mb-3">
                                             <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address" value="{{ is_null($user) ? '' : $user->address }}" />
                                             <small id="address-error"></small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="progress-company-document">
-                                    <div>
-                                        <div class="mb-4">
-                                            <h5>Location Details</h5>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-8 mb-3">
-                                                <label class="form-label">Company<span class="text-danger ms-1">*</span></label>
-                                                <input type="text" class="form-control" name="company_name" id="company_name" value="{{ is_null($user) ? '' : $user->company_name }}" />
-                                                <small id="company_name-error"></small>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <label for="progresspill-firstname-input" class="form-label">Contact Person Name<span class="text-danger ms-1">*</span></label>
-                                                <input type="text" class="form-control" name="contact_person_name" id="contact_person_name" value="{{ is_null($user) ? '' : $user->contact_person_name }}" />
-                                                <small id="contact_person_name-error"></small>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <label class="form-label">Industry<span class="text-danger ms-1">*</span></label>
-                                                <input type="text" class="form-control" name="industry" id="industry" value="{{ is_null($user) ? '' : $user->industry }}" />
-                                                <small id="industry-error"></small>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <label class="form-label">Service Name<span class="text-danger ms-1">*</span></label>
-                                                <input type="text" class="form-control" name="service_name" id="service_name" value="{{ is_null($user) ? '' : $user->service_name }}" />
-                                                <small id="service_name-error"></small>
-                                            </div>
-                                            <div class="col-lg-4 mb-3">
-                                                <label class="form-label">Zipcode<span class="text-danger ms-1">*</span></label>
-                                                <input type="text" class="form-control" name="zipcode" id="zipcode" value="{{ is_null($user) ? '' : $user->zipcode }}" />
-                                                <small id="zipcode-error"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="progress-login-detail">
-                                    <div class="mb-4">
-                                        <h5>Login Details</h5>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 mb-3">
-                                            <label for="progresspill-firstname-input" class="form-label">Email<span class="text-danger ms-1">*</span></label>
-                                            <input type="text" class="form-control" name="email" id="email" value="{{ is_null($user) ? '' : $user->email }}" />
-                                            <small id="email-error"></small>
-                                        </div>
-                                        <div class="col-lg-3 mb-3">
-                                            <label class="form-label">Username<span class="text-danger ms-1">*</span></label>
-                                            <input type="text" class="form-control" name="username" id="username" value="{{ is_null($user) ? '' : $user->username }}" />
-                                            <small id="username-error"></small>
-                                        </div>
-                                        <div class="col-lg-3 mb-3">
-                                            <label class="form-label">Password<span class="text-danger ms-1">*</span></label>
-                                            <input type="text" class="form-control" name="password" id="password" value="{{ is_null($user) ? '' : $user->password }}" />
-                                            <small id="password-error"></small>
                                         </div>
                                     </div>
                                 </div>

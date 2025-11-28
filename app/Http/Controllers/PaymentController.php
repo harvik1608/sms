@@ -52,16 +52,13 @@ class PaymentController extends Controller
             }
         }
         if($signatureStatus == true) {
+            $plan = Plan::select("id","name","amount","duration","whatsapp","is_multiple_file_allow")->where("is_active",1)->where("id",$post["plan_id"])->first();
+            
             $row = new User;
             $row->name = trim($post['name']);
             $row->email = trim($post['email']);
             $row->phone = trim($post['mobile_no']);
-            $row->contact_person_name = trim($post['contact_person_name']);
             $row->company_name = trim($post['company_name']);
-            $row->username = trim($post['username']);
-            $row->service_name = trim($post['service_name']);
-            $row->industry = trim($post['industry']);
-            $row->zipcode = trim($post['zipcode']);
             $row->state = trim($post['state']);
             $row->city = trim($post['city']);
             $row->address = trim($post['address']);
@@ -70,8 +67,6 @@ class PaymentController extends Controller
             $row->is_active = 1;
             $row->created_at = date("Y-m-d H:i:s");
             $row->save();
-
-            $plan = Plan::select("id","name","amount","duration","whatsapp","is_multiple_file_allow")->where("is_active",1)->where("id",$post["plan_id"])->first();
 
             $subscription = new Subscription;
             $subscription->user_id = $row->id;
