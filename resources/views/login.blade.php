@@ -15,6 +15,12 @@
 		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toast.css') }}">
 		<link rel="stylesheet" href="{{ asset('custom.css') }}">
+		<style>
+			.logo {
+				width: 50%;
+				margin: 0 auto;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="container-xxl">
@@ -23,12 +29,12 @@
 					<div class="card px-sm-6 px-0">
 						<div class="card-body">
 							<div class="app-brand justify-content-center">
-								<a href="index-2.html" class="app-brand-link gap-2">
-									<span class="app-brand-text demo text-heading fw-bold">{{ config('constant.app_name') }}</span>
+								<a href="{{ route('login') }}" class="app-brand-link gap-2">
+									<img src="{{ asset('tega/logo.png') }}" alt="Logo" class="logo" />
 								</a>
 							</div>
 							<!-- <h4 class="mb-1">Sign In! 👋</h4> -->
-							<p class="mb-6">Please sign-in to your account and start the adventure</p>
+							<!-- <p class="mb-6">Please sign-in to your account and start the adventure</p> -->
 							<form id="formAuthentication" class="mb-6" action="{{ route('check.login') }}" method="POST">
 								@csrf
 								<div class="mb-6">

@@ -16,15 +16,17 @@ class WelcomeMail extends Mailable
     public $subjectText;
     public $data;
     public $viewFile;
+    public $replyEmail;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($subjectText, $viewFile, $data = [])
+    public function __construct($subjectText, $viewFile, $data = [], $replyEmail = "")
     {
         $this->subjectText = $subjectText;
         $this->viewFile = $viewFile;
         $this->data = $data;
+        $this->replyEmail = $replyEmail;
     }
 
     /**
@@ -34,6 +36,9 @@ class WelcomeMail extends Mailable
     {
         return new Envelope(
             subject: $this->subjectText,
+            replyTo: [
+                new \Illuminate\Mail\Mailables\Address($this->replyEmail)
+            ]
         );
     }
 

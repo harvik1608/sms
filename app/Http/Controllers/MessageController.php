@@ -108,7 +108,8 @@ class MessageController extends Controller
                                 new WelcomeMail(
                                     subjectText: $post["subject"],
                                     viewFile: 'email_templates.message',
-                                    data: ['content' => $post["content"]]
+                                    data: ['content' => $post["content"]],
+                                    replyEmail: "monikakithoriya@gmail.com" ?? "default@example.com"
                                 )
                             );
                             $row = new Message;
@@ -127,7 +128,8 @@ class MessageController extends Controller
                                 new WelcomeMail(
                                     subjectText: $post["subject"],
                                     viewFile: 'email_templates.message',
-                                    data: ['content' => $post["content"]]
+                                    data: ['content' => $post["content"]],
+                                    replyEmail: "monikakithoriya@gmail.com" ?? "default@example.com"
                                 )
                             );
                             $row = new Message;
@@ -143,14 +145,16 @@ class MessageController extends Controller
                     }
                 }
             } else {
-                $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->whereIn('id', $post['send_to'])->get();
+                $sendTo = is_array($post['send_to']) ? $post['send_to'] : [$post['send_to']];
+                $contacts = Contact::select('id','name',DB::raw("CONCAT('91', phone) as phone"),'email')->whereIn('id', $sendTo)->get();
                 if(!$contacts->isEmpty()) {
                     foreach($contacts as $contact) {
                         Mail::to($contact->email)->send(
                             new WelcomeMail(
                                 subjectText: $post["subject"],
                                 viewFile: 'email_templates.message',
-                                data: ['content' => $post["content"]]
+                                data: ['content' => $post["content"]],
+                                replyEmail: "monikakithoriya@gmail.com" ?? "default@example.com"
                             )
                         );
                         $row = new Message;

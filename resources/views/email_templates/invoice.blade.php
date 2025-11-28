@@ -1,49 +1,119 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Invoice {{ $invoice->invoice_no }}</title>
-    <style>
-        body { font-family: DejaVu Sans, sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background: #f4f4f4; }
-        .text-right { text-align: right; }
-    </style>
-</head>
-<body>
+    <head>
+        <title>Invoice</title>
+        <style>
+            @font-face {
+                font-family: 'Nunito';
+                font-style: normal;
+                font-weight: 400;
+                src: url("{{ public_path('fonts/nunito/Nunito-Regular.ttf') }}") format('truetype');
+            }
 
-    <h2>Invoice #{{ $invoice->id }}</h2>
-    <p>Date: {{ format_date($invoice->created_at) }}</p>
+            @font-face {
+                font-family: 'Nunito';
+                font-style: normal;
+                font-weight: 600;
+                src: url("{{ public_path('fonts/nunito/Nunito-SemiBold.ttf') }}") format('truetype');
+            }
 
-    <h3>Customer Details</h3>
-    <p>
-        <strong>{{ $invoice->customer->name }}</strong><br>
-        {{ $invoice->customer->email }}<br>
-        {{ $invoice->customer->phone }}
-    </p>
-
-    <h3>Items</h3>
-    <table>
-        <thead>
+            @font-face {
+                font-family: 'Nunito';
+                font-style: normal;
+                font-weight: 700;
+                src: url("{{ public_path('fonts/nunito/Nunito-Bold.ttf') }}") format('truetype');
+            }
+            body {
+                font-family: 'Nunito', sans-serif;
+                font-size: 14px;
+                color: #333;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <table width="100%">
             <tr>
-                <th>Plan</th>
-                <th>Duration</th>
-                <th>Whatsapp Messages</th>
-                <th>Amount</th>
+                <td colspan="2" align="center"><img src="{{ public_path('tega/logo.jpg') }}" style="width: 175px;" /></td>
             </tr>
-        </thead>
-        <tbody>
             <tr>
-                <td align="center">{{ $invoice->plan?->name }}</td>
-                <td align="center">{{ $invoice->duration }} month(s)</td>
-                <td align="center">{{ $invoice->whatsapp }}</td>
-                <td align="center">{{ currency().$invoice->amount }}</td>
+                <td colspan="2"><h1>Invoice</h1><hr></td>
             </tr>
-        </tbody>
-    </table>
-
-    <h3 class="text-right">Grand Total: {{ currency() }}{{ number_format($invoice->amount, 2) }}</h3>
-
-</body>
+            <tr>
+                <td>
+                    <table width="100%">
+                        <tr>
+                            <td><b>Customer Details</b></td>
+                        </tr>
+                        <tr>
+                            <td>{{ $invoice->customer?->name }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $invoice->customer?->address }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $invoice->customer?->email }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $invoice->customer?->phone }}</td>
+                        </tr>
+                    </table>    
+                </td>
+                <td align="right">
+                    <table width="100%">
+                        <tr>
+                            <td align="right"><b>Company Details</b></td>
+                        </tr>
+                        <tr>
+                            <td align="right">{{ general_settings('app_name') }}</td>
+                        </tr>
+                        <tr>
+                            <td align="right">{{ general_settings('app_address') }}</td>
+                        </tr>
+                        <tr>
+                            <td align="right">{{ general_settings('app_email') }}</td>
+                        </tr>
+                        <tr>
+                            <td align="right">{{ general_settings('app_phone') }}</td>
+                        </tr>
+                    </table>    
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>
+                        <b>Invoice No.: #{{ $invoice->id }}<br>
+                        Date : {{ format_date_time($invoice->created_at) }}</b>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table width="100%" border="1px solid #efefef;">
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Duration</th>
+                                <th>Whatsapp Messages</th>
+                                <th align="right" style="padding: 5px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td align="center">{{ $invoice->plan?->name }}</td>
+                                <td align="center">{{ $invoice->duration }} Month(s)</td>
+                                <td align="center">{{ $invoice->whatsapp }}</td>
+                                <td align="right" style="padding: 5px;">{{ $invoice->amount }}</td>
+                            </tr>
+                            <tr>
+                                <td align="right" colspan="3" style="padding: 5px;"><b>TOTAL</b></td>
+                                <td align="right" style="padding: 5px;">{{ number_format($invoice->amount, 2) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>

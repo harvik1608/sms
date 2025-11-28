@@ -10,6 +10,7 @@
     use App\Http\Controllers\SubscriptionController;
     use App\Http\Controllers\StateController;
     use App\Http\Controllers\CityController;
+    use App\Http\Controllers\VendorGmailController;
 
     Route::get('/', [AuthController::class, 'index'])->name('login');
     Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('check.login');
@@ -67,3 +68,6 @@
         Route::post('/submit-change-password', [AuthController::class, 'submitChangePassword'])->name('submit.change.password');
         Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });
+
+    Route::get('/vendor/{id}/gmail/connect', [VendorGmailController::class, 'redirect']);
+    Route::get('/vendor/gmail/callback', [VendorGmailController::class, 'callback']);
